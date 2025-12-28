@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mi Tienda | Catálogo</title>
+
+  <!-- Estilos -->
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="container header">
+    <div>
+      <h1>Mi Tienda</h1>
+      <p class="subtitle">Catálogo de productos</p>
+
+      <!-- Filtro por categoría -->
+      <form method="GET" action="/" class="filters">
+        <label for="category">Categoría:</label>
+
+        <select id="category" name="category" onchange="this.form.submit()">
+          <option value="all" <%= selectedCategory === 'all' ? 'selected' : '' %>>
+            Todas
+          </option>
+
+          <% (categories || []).forEach(c => { %>
+            <option value="<%= c %>" <%= selectedCategory === c ? 'selected' : '' %>>
+              <%= c %>
+            </option>
+          <% }) %>
+        </select>
+
+        <!-- Por si el navegador tiene JS desactivado -->
+        <noscript>
+          <button type="submit">Filtrar</button>
+        </noscript>
+      </form>
+    </div>
+  </header>
+
+  <!-- Contenido principal -->
+  <main class="container">
+    <section class="grid">
+
+      <% if (products.length === 0) { %>
+        <p class="empty">No hay productos disponibles.</p>
+      <% } %>
+
+      <% products.forEach(p => { %>
+        <article class="card">
+
+          <!-- Imagen del producto -->
+          <img
+            src="/img/<%= p.image %>"
+            alt="<%= p.name %>"
+            loading="lazy"
+          />
+
+          <!-- Contenido -->
+          <div class="content">
+            <div class="row">
+              <strong><%= p.name %></strong>
+              <span class="badge"><%= p.category %></span>
+            </div>
+
+            <p class="desc"><%= p.description %></p>
+
+            <div class="row">
+              <span class="price">Q <%= p.price %></span>
+            </div>
+          </div>
+
+        </article>
+      <% }) %>
+
+    </section>
+  </main>
+
+</body>
+</html>

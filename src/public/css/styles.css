@@ -1,0 +1,19 @@
+.filters{
+  margin-top: 10px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.filters select{
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid #1f2c40;
+  background: rgba(255,255,255,.03);
+  color: #e8eef7;
+}
+
+.filters label{
+  color: #9db0c7;
+}
