@@ -49,36 +49,39 @@
       <% } %>
 
       <% products.forEach(p => { %>
-        <article class="card">
+        <article class="p-card">
+          <a class="p-link" href="/producto/<%= p.id %>">
+            <div class="p-media">
+              <span class="p-badge">¡Oferta!</span>
 
-          <!-- Imagen del producto -->
-        <img
-            src="<%= p.image_url || '/img/no-image.png' %>"
-            alt="<%= p.name %>"
-            loading="lazy"
-        />
-
-
-          <!-- Contenido -->
-          <div class="content">
-            <div class="row">
-              <strong><%= p.name %></strong>
-              <span class="badge"><%= p.category %></span>
+              <img
+                class="p-img"
+                src="<%= p.image_url && p.image_url.length > 5 ? p.image_url : '/img/no-image.png' %>"
+                alt="<%= p.name %>"
+                loading="lazy"
+                referrerpolicy="no-referrer"
+                onerror="this.onerror=null; this.src='/img/no-image.png';"
+              />
             </div>
 
-            <p class="desc"><%= p.description %></p>
+            <div class="p-body">
+              <div class="p-brand"><%= (p.brand || p.category || '').toUpperCase() %></div>
 
-            <div class="row">
-              <span class="price">Q <%= p.price %></span>
+              <h3 class="p-title"><%= p.name %></h3>
+
+              <div class="p-prices">
+                <% if (p.price_normal && Number(p.price_normal) > 0) { %>
+                  <div class="p-normal">Precio normal Q<%= p.price_normal %></div>
+                <% } %>
+
+                <div class="p-promo">
+                  <span class="p-promo-label">Promo</span>
+                  <span class="p-promo-price">Q<%= p.price %></span>
+                </div>
+              </div>
             </div>
-
-            <div class="actions">
-              <a class="btn" href="/producto/<%= p.id %>">Ver detalle</a>
-            </div>
-
-          </div>
-
-        </article>
+          </a>
+        </article>        
       <% }) %>
 
     </section>
