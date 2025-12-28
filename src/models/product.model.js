@@ -102,6 +102,12 @@ class Product {
     cats.sort((a, b) => a.localeCompare(b));
     return cats;
   }
+  
+  static async getById(id) {
+  const products = await Product.getAll();
+  const target = String(id).trim();
+  return products.find(p => String(p.id).trim() === target) || null;
+  }
 }
 
 module.exports = Product;
