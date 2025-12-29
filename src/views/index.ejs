@@ -13,8 +13,8 @@
   <!-- Header -->
   <header class="container header">
     <div>
-      <h1>Mi Tienda</h1>
-      <p class="subtitle">Catálogo de productos</p>
+      <h1>CAJA DE LAS SORPRESAS</h1>
+      <h2>Catálogo de productos</h2>
 
       <!-- Filtro por categoría -->
       <form method="GET" action="/" class="filters">
@@ -48,6 +48,19 @@
         <p class="empty">No hay productos disponibles.</p>
       <% } %>
 
+      <%
+      const formatPrice = (value) => {
+        return Number(value || 0).toLocaleString('en-US', {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2
+        });
+      };%>
+
+
+
+
+      
+
       <% products.forEach(p => { %>
         <article class="p-card">
           <a class="p-link" href="/producto/<%= p.id %>">
@@ -65,7 +78,6 @@
             </div>
 
             <div class="p-body">
-              <div class="p-brand"><%= (p.brand || p.category || '').toUpperCase() %></div>
 
               <h3 class="p-title"><%= p.name %></h3>
 
@@ -76,7 +88,7 @@
 
                 <div class="p-promo">
                   <span class="p-promo-label">Promo</span>
-                  <span class="p-promo-price">Q<%= p.price %></span>
+                  <span class="p-promo-price">Q <%= formatPrice(p.price) %></span>
                 </div>
               </div>
             </div>
