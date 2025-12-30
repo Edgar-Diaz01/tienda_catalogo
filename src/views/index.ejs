@@ -16,21 +16,95 @@
       <h1>CAJA DE LAS SORPRESAS</h1>
       <h2>Catálogo de productos</h2>
 
-      <!-- Filtro por categoría -->
-      <form method="GET" action="/" class="filters">
-        <label for="category">Categoría:</label>
+      <form method="GET" action="/" class="topbar">
+        <div class="searchbox">
+          <input
+            type="search"
+            name="q"
+            placeholder="Buscar producto..."
+            value="<%= q || '' %>"
+            aria-label="Buscar producto"
+          />
+          <button type="submit" aria-label="Buscar">🔍</button>
+        </div>
 
-        <select id="category" name="category" onchange="this.form.submit()">
-          <option value="all" <%= selectedCategory === 'all' ? 'selected' : '' %>>
-            Todas
-          </option>
+  <!-- Botón para abrir panel de categorías -->
+      <div>
+        <button type="button" class="cat-btn" id="openCats" >
+          Categorías ☰
+        </button>
+      </div>    
 
-          <% (categories || []).forEach(c => { %>
-            <option value="<%= c %>" <%= selectedCategory === c ? 'selected' : '' %>>
-              <%= c %>
-            </option>
-          <% }) %>
-        </select>
+
+  <!-- Mantener categoría actual en el form si ya venía seleccionada -->
+      <input type="hidden" name="category" value="<%= selectedCategory || 'all' %>"/>
+</form>
+
+<!-- Overlay + Panel de categorías -->
+      <div class="overlay" id="overlay" hidden></div>
+
+    <aside class="cat-panel" id="catPanel" aria-hidden="true">
+      <div class="cat-panel__header">
+        <strong>Categorías</strong>
+        <button type="button" class="cat-close" id="closeCats" aria-label="Cerrar">✕</button>
+      </div>
+
+      <nav class="cat-list">
+        <!-- Todas -->
+        <a
+          class="cat-item <%= selectedCategory === 'all' ? 'active' : '' %>"
+          href="/?<%= q ? ('q=' + encodeURIComponent(q) + '&') : '' %>category=all"
+        >
+          Todas
+        </a>
+
+        <% (categories || []).forEach(c => { %>
+          <a
+            class="cat-item <%= selectedCategory === c ? 'active' : '' %>"
+            href="/?<%= q ? ('q=' + encodeURIComponent(q) + '&') : '' %>category=<%= encodeURIComponent(c) %>"
+          >
+            <%= c %>
+          </a>
+        <% }) %>
+      </nav>
+    </aside>
+
+    <script>
+      (function () {
+        const openBtn = document.getElementById("openCats");
+        const closeBtn = document.getElementById("closeCats");
+        const panel = document.getElementById("catPanel");
+        const overlay = document.getElementById("overlay");
+
+        function openPanel() {
+          panel.classList.add("open");
+          overlay.hidden = false;
+          overlay.classList.add("show");
+          panel.setAttribute("aria-hidden", "false");
+          openBtn.setAttribute("aria-expanded", "true");
+          document.body.classList.add("no-scroll");
+          document.body.classList.add("panel-open");
+        }
+
+        function closePanel() {
+          panel.classList.remove("open");
+          overlay.classList.remove("show");
+          overlay.hidden = true;
+          panel.setAttribute("aria-hidden", "true");
+          openBtn.setAttribute("aria-expanded", "false");
+          document.body.classList.remove("no-scroll");
+          document.body.classList.remove("panel-open");
+        }
+
+        openBtn.addEventListener("click", openPanel);
+        closeBtn.addEventListener("click", closePanel);
+        overlay.addEventListener("click", closePanel);
+
+        document.addEventListener("keydown", (e) => {
+          if (e.key === "Escape") closePanel();
+        });
+      })();
+    </script>
 
         <!-- Por si el navegador tiene JS desactivado -->
         <noscript>
@@ -65,8 +139,6 @@
         <article class="p-card">
           <a class="p-link" href="/producto/<%= p.id %>">
             <div class="p-media">
-              <span class="p-badge">¡Oferta!</span>
-
               <img
                 class="p-img"
                 src="<%= p.image_url && p.image_url.length > 5 ? p.image_url : '/img/no-image.png' %>"
@@ -86,9 +158,9 @@
                   <div class="p-normal">Precio normal Q<%= p.price_normal %></div>
                 <% } %>
 
-                <div class="p-promo">
-                  <span class="p-promo-label">Promo</span>
-                  <span class="p-promo-price">Q <%= formatPrice(p.price) %></span>
+                <div class="p-price">
+                  <span class="p-price-label">Precio</span>
+                  <span class="p-price-price">Q <%= formatPrice(p.price) %></span>
                 </div>
               </div>
             </div>
